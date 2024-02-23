@@ -1,4 +1,5 @@
 #include <iostream>
+#include <thread>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -6,12 +7,12 @@
 #include <arpa/inet.h>
 #include <string.h>
 #include "../../include/server.h"
+#include "../../include/tcpCommunication.h"
 
 
 // Simple declarations for the constructor and destructor
-TcpServer::TcpServer() {
-    // ipv4 = "10.21.31.47";
-    ipv4 = "127.0.0.1";
+TcpServer::TcpServer(std::string ipv4_address) {
+    ipv4 = ipv4_address;
 }
 TcpServer::~TcpServer() {}
 
@@ -21,7 +22,7 @@ TcpServer::~TcpServer() {}
 *    - Setting the port and IPv4
 *    - Binding the socket to the port/IPv4
 *    - Making the socket listen for a connection
-* The communicate() function is then called to handle communication with the client
+*    - Calling the establishConnection() function to accept and handle communication with the client
 */
 void TcpServer::startServer() {
     // Create the socket for our server. Since we want to use TCP, we use SOCK_STREAM
@@ -32,9 +33,9 @@ void TcpServer::startServer() {
     // Set our port to 50000 and our IPv4
     socket_address.sin_family = AF_INET;
     socket_address.sin_port = htons(50000);
-    socket_address.sin_addr.s_addr = inet_addr(ipv4);
+    socket_address.sin_addr.s_addr = inet_addr(ipv4.c_str());
     // Convert an IPv4 from a string to binary
-    if (inet_pton(AF_INET, ipv4, &socket_address.sin_addr) != 1) {
+    if (inet_pton(AF_INET, ipv4.c_str(), &socket_address.sin_addr) != 1) {
         perror("Failed to convert IP address to binary");
         exit(EXIT_FAILURE);
     }
@@ -50,7 +51,7 @@ void TcpServer::startServer() {
         exit(EXIT_FAILURE);
     }
     std::cout << "Server is up and listening." << std::endl;
-    communicate();
+    establishConnection();
 }
 
 /*
@@ -65,13 +66,13 @@ void TcpServer::closeServer() {
 }
 
 /*
-* Function for handling communication with the client, which consists of:
+* Function for handling connection with the client, which consists of:
 *   - Accepting a connection and creating a new file descriptor for communication
 *   - Sending an initial message veryifying successful connection
-*   - Receiving a single message from the client
+*   - Allowing threaded communication with the client via the communicate() function
 *   - Closing the socket
 */
-void TcpServer::communicate() {
+void TcpServer::establishConnection() {
     // Create new socket for the client connection
     int new_client_socket_fd;
     if ((new_client_socket_fd = accept(socket_fd, (struct sockaddr *)&socket_address, (socklen_t *)&socket_address)) == -1) {
@@ -80,20 +81,14 @@ void TcpServer::communicate() {
     }
     // Send a message to the client that the connection was successful
     const std::string connection_message = "Connection established successfully.\n";
-    // const char *connection_message = "Connection established successfully.\n";
     ssize_t bytes_sent;
     if ((bytes_sent = send(new_client_socket_fd, connection_message.c_str(), connection_message.length(), 0)) == -1) {
         perror("Failed to send connection confirmation");
     }
-    // Buffer to store message from client
-    char buffer[1024];
-    ssize_t message_from_client;
-    if ((message_from_client = recv(new_client_socket_fd, &buffer, sizeof(buffer), 0)) < 1) {
-        perror("Recieve failed");
-        exit(EXIT_FAILURE);
-    }
-    buffer[message_from_client] = '\0';
-    std::cout << buffer << std::endl;
+    // Print the success message to the server
+    std::cout << connection_message << std::endl;
+    // Communicate with any clients
+    communicate(new_client_socket_fd);
     // Close the socket
     if (close(new_client_socket_fd) == -1) {
         perror("Failed to close socket");

@@ -7,14 +7,10 @@ class Client {
     public:
         Client();
         ~Client();
-        void connect_to_server();
-
-
+        void connectToServer(std::string ip_address);
     private:
         int socket_fd;                        // Socket file descriptor
         sockaddr_in server_socket_address;
-        const char *ipv4;                     // IPv4 adress
-
 };
 
 #endif

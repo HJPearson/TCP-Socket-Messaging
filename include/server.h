@@ -6,14 +6,14 @@
 
 class TcpServer {
     public:
-        TcpServer();
+        TcpServer(std::string ipv4_address);
         ~TcpServer();
         void startServer();
         void closeServer();
-        void communicate();
+        void establishConnection();
     private:
         int socket_fd;                 // Socket file descriptor
         sockaddr_in socket_address;
-        const char *ipv4;              // IPv4 adress
+        std::string ipv4;              // IPv4 adress
 };
 #endif
