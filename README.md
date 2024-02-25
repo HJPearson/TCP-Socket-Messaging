@@ -10,4 +10,4 @@ To compile, enter these commands into the terminal in order (if you aren't using
 - make <br>
 You should then have two executables, server and client, for you to run in separate terminal windows. <br>
 
-If you are on Windows, I don't think this code will work for you. I could be wrong, but I think there are some differences with sys/socket.h.
+If you are on Windows, I don't think this code will work for you. I could be wrong, but I think there are some differences with sys/socket.h in Windows.
