@@ -13,5 +13,5 @@ You should then have two executables, server and client, for you to run in separ
 If you are on Windows, I don't think this code will work for you. I could be wrong, but it looks like you don't have access to sys/socket.h and should probably use [Winsock](https://learn.microsoft.com/en-us/windows/win32/winsock/windows-sockets-start-page-2?redirectedfrom=MSDN) <br>
 
 
-Usage:
+Usage: <br>
 After compiling, and while you are in the build directory, you can run ./server and ./client in separate terminal windows. You will then be prompted for an IPv4 address to connect to for both programs. I have made it simple to use the localhost's IPv4 - 127.0.0.1 - by simply typing localhost. Or, if you want to try running the program on separate machines, you can make sure to use the same custom IPv4 for both of them.
