@@ -54,5 +54,6 @@
         "vector": "cpp",
         "algorithm": "cpp",
         "thread": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": false
 }
