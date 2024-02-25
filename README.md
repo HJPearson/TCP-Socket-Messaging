@@ -10,4 +10,4 @@ To compile, enter these commands into the terminal in order (if you aren't using
 - make <br>
 You should then have two executables, server and client, for you to run in separate terminal windows. <br>
 
-If you are on Windows, I don't think this code will work for you. I could be wrong, but it looks like you don't have access to sys/socket.h and should probably use [Winsock](https://learn.microsoft.com/en-us/windows/win32/winsock/windows-sockets-start-page-2?redirectedfrom=MSDN)
+If you are on Windows, I don't think this code will work for you. I could be wrong, but it looks like you don't have access to sys/socket.h and should probably use [Winsock](https://learn.microsoft.com/en-us/windows/win32/winsock/windows-sockets-start-page-2?redirectedfrom=MSDN){:target="_blank"}
